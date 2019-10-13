@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Facebook cant do THAT!</title>
-		
-		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-		
-		<style>
-			body{
-				background-color:lightgray;
-			}
-		
-			h1{
-				color:white;
-				display:inline;
-			}
-			
-			.header-line{
-				background-color:lightgreen;
-			}
-			
-			.container-stuff{
-				background-color:white;
-				padding: 20px;
-				margin: 60px;
-			
-			}
-			
-			img{
-				width: 100%;
-			}
-			
-		
-		</style>
-	</head>
-	<body>
-		<div class="header-line">
-			<img style="width:120px;" src="assets/img/weather_icon.png" alt="sunshine">
-			<h1>WeatherBook</h1>		
-		</div>
-		
-		<div class="container-stuff">
-			<h2> Социална мрежа!</h2>
-			<p>
-				Единствената социална мрежа, която не краде информация! :D				
-				
-			</p>
-			<p style="font-size:0.1em">
-				Поне за сега...
-			</p>		
-		</div>
-		
+<head>
+<meta charset="UTF-8">
+<title>Facebook cant do THAT!</title>
+
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link href="assets/css/main.css" rel="stylesheet">
+
+</head>
+<body>
+	<header>
 		<div>
-			<div class="container-stuff" style="float:left; width:45%">
-				<img src="assets/img/family.jpg" alt="family on pickning">
+			<img style="width: 120px;" src="assets/img/weather_icon.png"
+				alt="sunshine">
+			<h1>WeatherBook</h1>
+		</div>
+	</header>
+
+	<div class="container">
+
+		<div class="row">
+			<div class="col-12 container-stuff">
+				<h2>Социална мрежа!</h2>
+				<p>Единствената социална мрежа, която не краде информация! :D</p>
+				<p style="font-size: 0.1em">Поне за сега...</p>
 			</div>
-			
-			<div class="container-stuff" style="float:right; width:25%">
+		</div>
+
+		<div class="row">
+			<div class="col-7 container-stuff d-none d-md-block">
+				<img class="img-fluid" src="assets/img/family.jpg"
+					alt="family on pickning">
+			</div>
+
+			<div class="col container-stuff">
 				<form action="home.html" method="get">
-					<label for="username">Username: </label>
-					<div>
-						<span><i class="fa fa-user"></i></span>
-						<input type="text" name="username" placeholder="Username">
+
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">
+									<i class="fa fa-user"></i>
+								</span> 
+							</div>
+							<input class="form-control" type="text"
+								name="username" placeholder="Потребител">
+						</div>
 					</div>
-													
-					<label for="password">Password: </label>					
-					<div>					
-						<span><i class="fa fa-lock"></i></span>
-						<input type="password" name="password" placeholder="Password">
-					</div>	
-							
-					<input type="submit">					
+						
+					
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">
+									<i class="fa fa-lock"></i>
+								</span> 
+							</div>							
+								
+							<input class="form-control" type="password"
+							name="password" placeholder="Парола">
+						</div>
+					</div>
+
+					<button type="submit" class="btn btn-primary"> Влез </button>
+					<button class="btn btn-success pull-right"> Регистрация </button>
+				
 				</form>
 			</div>
-		
-		</div>		
-	</body>
+		</div>
+
+	</div>
+</body>
 </html>
