@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Even better website!</title>
+
+<link rel="stylesheet" 
+href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+<script src="https://code.jquery.com/jquery-3.4.1.js" > </script>
+
+</head>
+<body>
+
+<div class="container">
+
+	<div class="row">
+		<div class="col-lg-12" style="height: 300px">
+			<div style="width:60px; height: 60px; background-color:green;
+				position: absolute"
+				id="iLikeToMoveItMoveIt">
+			
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<a href="#" id="moveItToTheLeft" class="btn btn-danger">Left Step</a>
+			<a href="#" id="moveItToTheRight" class="btn btn-danger">Right Step</a>		
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<input type="text" id="cityName">
+			
+			<a href="#" id="getTemp" class="btn btn-info">Check Temperature</a>
+		
+			<p id="writeItDown"> </p>
+		</div>
+	</div>
+
+</div>
+
+<script>
+	$(document).ready(function (){
+		
+		var apiKey = '891be3d8ea6c5763c5d8e6ad1267c77b';
+		
+		$('#moveItToTheRight').click(function (){
+			$('#iLikeToMoveItMoveIt').animate({ 'left' : '100%' });
+			
+		});
+		
+		$('#moveItToTheLeft').click(function (){			
+			$('#iLikeToMoveItMoveIt').animate({ 'left' : '0' });
+		});
+		
+		$(document).keydown(function (e){
+			if(e.keyCode == 40){
+				$('#iLikeToMoveItMoveIt').animate({ 'top' : '100%' });
+			}else if(e.keyCode == 38){
+				$('#iLikeToMoveItMoveIt').animate({ 'top' : '0%' });
+			}			
+		});
+		
+		$('#iLikeToMoveItMoveIt').click(function (){
+			$('#iLikeToMoveItMoveIt').animate(
+					{ 'top' : Math.random() * 100 + '%',
+					  'left' : Math.random() * 100	+ '%'					
+					});
+		});
+		
+		
+		$('#getTemp').click(function() {
+			cityName = $('#cityName').val();
+			
+			$.ajax({
+				type: "get",
+				url: "http://api.openweathermap.org/data/2.5/weather?q=" 
+						+ cityName + 
+						"&appid=" + apiKey + "&units=metric",
+						success: function(resp){
+							$('#writeItDown').append(resp.main.temp);
+						}				
+			});			
+			
+		});
+		
+		
+	});
+
+</script>
+
+
+</body>
+</html>

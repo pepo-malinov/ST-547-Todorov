@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Best web page EVER!!!</title>
+
+<link rel="stylesheet" 
+href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+<script src="https://code.jquery.com/jquery-3.4.1.js" > </script>
+
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-6">
+			<input type="text" id="food" />
+			<a href="#" class="btn btn-success" id="feed">Hungry!</a>
+			<a href="#" class="btn btn-success" id="feedMeLater">Not So Hungry!</a>
+			
+		</div>
+		
+		<div class="col-lg" id="feedMe">
+		
+		</div>
+	</div>
+
+</div>
+
+<script>
+	$(document).ready(function(){
+		
+		function getData(){
+			return $('#food').val();	
+		}
+		
+		$('#feedMeLater').click(function(){
+			$('#feedMe').prepend(getData());
+		});
+		
+		$('#feed').click(function(){			
+			
+			$('#feedMe').append(getData());
+		
+			//$('#feedMe').append($('#food').val());
+		});		
+	});
+</script>
+
+</body>
+</html>
