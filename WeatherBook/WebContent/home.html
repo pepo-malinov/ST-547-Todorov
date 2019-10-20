@@ -111,23 +111,23 @@
                                         </div>
                                         <label for="select-city">Избери град:</label>
                                         <select id="select-city" class="form-control">
-                                            <option value="0" selected>Всички</option>
-                                            <option>София</option>
-                                            <option>Пловдив</option>
-                                            <option>Варна</option>
-                                            <option>Бургас</option>
-                                            <option>Стара Загора</option>
-                                            <option>Русе</option>
-                                            <option>Плевен</option>
-                                            <option>Добрич</option>
-                                            <option>Сливен</option>
-                                            <option>Шумен</option>
-                                            <option>Перник</option>
-                                            <option>Пазарджик</option>
-                                            <option>Ямбол</option>
-                                            <option>Хасково</option>
-                                            <option>Благоевград</option>
-                                            <option>Велико Търново</option>
+                                            <option value="0" selected disabled>Изберете град</option>
+                                            <option value="sofia">София</option>
+                                            <option value="plovdiv">Пловдив</option>
+                                            <option value="varna">Варна</option>
+                                            <option value="burgas">Бургас</option>
+                                            <option value="stara zagora">Стара Загора</option>
+                                            <option value="ruse">Русе</option>
+                                            <option value="pleven">Плевен</option>
+                                            <option value="dobrich">Добрич</option>
+                                            <option value="sliven">Сливен</option>
+                                            <option value="shumen">Шумен</option>
+                                            <option value="pernik">Перник</option>
+                                            <option value="pazardvik">Пазарджик</option>
+                                            <option value="qmbol">Ямбол</option>
+                                            <option value="haskovo">Хасково</option>
+                                            <option value="blagoevgrad">Благоевград</option>
+                                            <option value="veliko tarnovo">Велико Търново</option>
                                         </select>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="panel-footer" style="height:55px;">
-                            <button type="button" class="btn btn-primary pull-right publish"><span class="glyphicon glyphicon-globe"></span> Публикувай</button>
+                            <button type="button" id="postComment" class="btn btn-primary pull-right publish"><span class="glyphicon glyphicon-globe"></span> Публикувай</button>
                         </div>
                     </div>
                 </div>
@@ -152,9 +152,9 @@
                             <h3 class="panel-title">Твоите отбелязвания</h3>
                         </div>
 
-                        <ul class="list-group" style="min-height:241px;">
+                        <ul class="list-group" style="min-height:241px;" id="contentList">
 
-                            <li class="list-group-item">
+                            <li class="list-group-item" style="display:none" id="cloneMe">
                                 <div class="row">
                                     <div class="col-sm-2 col-xs-3">
                                         <img src="assets/img/icons/clear_sky.png" class="thumbnail img-responsive">
@@ -169,37 +169,7 @@
                                     </div>
                                 </div>
                             </li>
-
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-3">
-                                        <img src="assets/img/icons/rain.png" class="thumbnail img-responsive">
-                                    </div>
-                                    <div class="col-sm-7 col-xs-6">
-                                        <span class="label label-success"><span class="current-temp">20</span> ℃</span>
-                                        <h4>Пловдив</h4>
-                                        <p>Времето беше супер. Разхождах се по главната. Купих си сладолед и пих вода от чешмичката на джумаята. </p>
-                                    </div>
-                                    <div class="col-sm-3 col-xs-3">
-                                        <button type="button" class="btn btn-danger pull-right remove-post"><span class="glyphicon glyphicon-remove"></span><span class="hidden-xs"> Изтрий</span></button>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-sm-2 col-xs-3">
-                                        <img src="assets/img/icons/few_clouds.png" class="thumbnail img-responsive">
-                                    </div>
-                                    <div class="col-sm-7 col-xs-6">
-                                        <span class="label label-success"><span class="current-temp">24</span> ℃</span>
-                                        <h4>Пловдив</h4>
-                                        <p>Времето беше супер. Разхождах се по главната. Купих си сладолед и пих вода от чешмичката на джумаята. </p>
-                                    </div>
-                                    <div class="col-sm-3 col-xs-3">
-                                        <button type="button" class="btn btn-danger pull-right remove-post"><span class="glyphicon glyphicon-remove"></span><span class="hidden-xs"> Изтрий</span></button>
-                                    </div>
-                                </div>
-                            </li>
+                            
                         </ul>
                     </div>
 
@@ -212,6 +182,53 @@
 </div>
 
 
+<script>
+
+$(document).ready(function (){
+	
+	var apiid = "891be3d8ea6c5763c5d8e6ad1267c77b";
+	
+	$('#postComment').click(function (){
+		
+		cityName = $('#select-city').val();
+		
+		$.ajax({
+			method: "GET",
+			url: "http://api.openweathermap.org/data/2.5/weather?q=" 
+				+ cityName + 
+				"&appid=" + apiid + "&units=metric",
+			success: function(resp){				
+			
+				var miniMe = $('#cloneMe').clone();
+				
+				miniMe.attr('id', '');
+				miniMe.find('h4').text(cityName);
+				miniMe.find('p').html($('#comment').val());
+				miniMe.find('.current-temp').html(resp.main.temp);
+				miniMe.find('button').click(function (){
+					miniMe.remove();
+					
+				});
+				
+				miniMe.show();
+				
+				$('#contentList').append(miniMe);
+				
+				$('#comment').val("");				
+					
+				},
+			error: function(){
+				alert("Something went TEREBLY WRONG!!!! \nYOU BROKE IT!");
+			}
+				
+			
+		})
+		
+	});
+	
+});
+
+</script>
 
 </body>
 </html>
