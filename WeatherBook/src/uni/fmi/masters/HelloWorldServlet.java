@@ -1,6 +1,11 @@
 package uni.fmi.masters;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,9 +59,14 @@ public class HelloWorldServlet extends HttpServlet {
 		
 		if(password.equals(repeatPassword)) {
 			UserBean user = new UserBean(username, email, password);
-			request.setAttribute("user", user);
-			
-			redirect("profile.jsp", request, response);
+		
+			if(insertUserIntoDatabase(user)) {
+				request.setAttribute("user", user);			
+				redirect("profile.jsp", request, response);
+			}else {
+				request.setAttribute("message", "Registration unsuccessfull");
+				redirect("error.jsp", request, response);
+			}
 			
 		}else {
 			request.setAttribute("message", "Password missmatch!");
@@ -65,6 +75,59 @@ public class HelloWorldServlet extends HttpServlet {
 		
 	}
 	
+	private boolean insertUserIntoDatabase(UserBean user) {
+		
+		Connection con = null;
+
+		try {
+			con = openConnection();
+			
+			String query = "INSERT INTO USER ("
+					+ "USERNAME,PASSWORD,EMAIL)"
+					+ " VALUES (?,?,?)";
+			
+			PreparedStatement pst = con.prepareStatement(query);
+			
+			pst.setString(1, user.getUsername());
+			pst.setString(2, user.getPassword());
+			pst.setString(3, user.getEmail());
+			
+			int count = pst.executeUpdate();
+								
+			if(count > 0) {
+				return true;
+			}
+			
+		} catch (SQLException e) {			
+			e.printStackTrace();			
+		}finally {
+			
+			try {				
+				if(con != null) {
+					con.close();
+				}
+				
+			} catch (SQLException e) {			
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return false;			
+	}
+	
+	private Connection openConnection() throws SQLException {
+			
+		try {
+			Class.forName("org.h2.Driver");
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		}
+		
+		return DriverManager.getConnection("jdbc:h2:~/weatherBook", "sa", "");
+	
+	}
+
 	private void redirect(String page, HttpServletRequest request, HttpServletResponse response) {
 		
 		RequestDispatcher rd = request.getRequestDispatcher(page);
@@ -83,12 +146,50 @@ public class HelloWorldServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-		if(username.equalsIgnoreCase("gotin") && password.equals("gotin321")) {
+		UserBean user = login(username, password);
+		
+		if(user != null) {
+			request.setAttribute("user", user);
 			redirect("home.html", request, response);
 		}else {			
 			request.setAttribute("message", "Wrong password information!");
 			redirect("error.jsp", request, response);
 		}
+	}
+
+	private UserBean login(String username, String password) {
+		Connection con = null;
+		ResultSet rs = null;
+		
+		try {
+			con = openConnection();
+			
+			String query = "SELECT ID, email, image FROM USER WHERE "
+					+ " username=? AND password=?";
+			
+			PreparedStatement pst = con.prepareStatement(query);
+			pst.setString(1, username);
+			pst.setString(2, password);
+			
+			rs = pst.executeQuery();
+			
+			if(rs.first()) {
+				UserBean user = new UserBean();
+				user.setUsername(username);
+				
+				user.setEmail(rs.getString("email"));
+				user.setAvatar(rs.getString("image"));
+				user.setId(rs.getInt("id"));
+				
+				return user;				
+			}
+			
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
+		
+		
+		return null;
 	}
 
 	/**

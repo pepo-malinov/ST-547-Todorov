@@ -5,11 +5,41 @@ public class UserBean {
 	private String username;
 	private String email;
 	private String password;
+	private String avatar;
+	private int id;
 	
 	public UserBean(String username, String email, String password) {
 		this.email = email;
 		this.password = password;
 		this.username = username;		
+	}
+
+	
+	
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
+	public UserBean() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getUsername() {
