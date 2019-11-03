@@ -15,14 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import uni.fmi.masters.beans.UserBean;
+import uni.fmi.masters.repository.JPAUserRepository;
 
 /**
  * Servlet implementation class HelloWorldServlet
  */
 @WebServlet("/HelloWorldServlet")
 public class HelloWorldServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
-       
+    JPAUserRepository repo = new JPAUserRepository();   
+		
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -60,7 +63,8 @@ public class HelloWorldServlet extends HttpServlet {
 		if(password.equals(repeatPassword)) {
 			UserBean user = new UserBean(username, email, password);
 		
-			if(insertUserIntoDatabase(user)) {
+			//if(insertUserIntoDatabase(user)) { Old way
+			if(repo.createUser(user)) {
 				request.setAttribute("user", user);			
 				redirect("profile.jsp", request, response);
 			}else {
@@ -146,7 +150,9 @@ public class HelloWorldServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-		UserBean user = login(username, password);
+		//UserBean user = login(username, password); The Old way
+				
+		UserBean user = repo.loginUser(username, password);
 		
 		if(user != null) {
 			request.setAttribute("user", user);
