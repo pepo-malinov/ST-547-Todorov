@@ -13,35 +13,16 @@ import org.eclipse.persistence.exceptions.TransactionException;
 
 import uni.fmi.masters.beans.UserBean;
 
-public class JPAUserRepository {
-	
-	public EntityManager getEntityManager() {
-		EntityManagerFactory factory = 
-				Persistence.createEntityManagerFactory("UserPU");
-		
-		return factory.createEntityManager();
+public class JPAUserRepository extends BaseRepository<UserBean>{
+
+	public JPAUserRepository() {
+		super(UserBean.class);
 	}
-	
-	public boolean createUser(UserBean user) {
-		EntityManager em = getEntityManager();
-		
+
+	public boolean createUser(UserBean user) {		
 		user.setPassword(hashMe(user.getPassword()));
 		
-		try {
-			em.getTransaction().begin();
-			em.persist(user);
-			em.getTransaction().commit();	
-		
-		}catch(TransactionException e) {
-			em.getTransaction().rollback();
-			
-			System.err.println(e.getMessage());
-			return false;			
-		}finally {
-			em.close();
-		}
-		
-		return  true;		
+		return insert(user);			
 	}
 	
 	public UserBean loginUser(String username, String password) {

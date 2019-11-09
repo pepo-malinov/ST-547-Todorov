@@ -1,10 +1,14 @@
 package uni.fmi.masters.beans;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -27,14 +31,26 @@ public class UserBean {
 	@Column(name = "avatar", length = 250)
 	private String avatar;
 	
+	@OneToMany(mappedBy = "user" ,
+			fetch = FetchType.EAGER)
+	private List<CommentBean> comments;
+	
 	public UserBean() {	}
 	
 	public UserBean(String username, String email, String password) {
 		this.email = email;
 		this.password = password;
 		this.username = username;		
-	}
+	}	
 	
+	public List<CommentBean> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentBean> comments) {
+		this.comments = comments;
+	}
+
 	public String getAvatar() {
 		return avatar;
 	}

@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import uni.fmi.masters.beans.CommentBean;
 import uni.fmi.masters.beans.UserBean;
+import uni.fmi.masters.repository.JPACommentRepository;
 import uni.fmi.masters.repository.JPAUserRepository;
 
 /**
@@ -47,10 +50,33 @@ public class HelloWorldServlet extends HttpServlet {
 			case "register":
 				registerUser(request, response);
 				break;
+			case "insertComment":
+				insertComment(request,response);				
+				break;
 		}
 		
 		
 
+	}
+
+	private void insertComment(HttpServletRequest request, HttpServletResponse response) {
+		String city = request.getParameter("city");
+		String temp = request.getParameter("temp");
+		String comment = request.getParameter("comment");
+		String user = request.getParameter("user");
+		
+		JPAUserRepository jpaUser = new JPAUserRepository();
+		
+		CommentBean commentEntity = new CommentBean();
+		commentEntity.setCity(city);
+		commentEntity.setTemp(Double.parseDouble(temp));
+		commentEntity.setComment(comment);
+		commentEntity.setUser(jpaUser.findById(Integer.parseInt(user)));
+		
+		JPACommentRepository jpaComment = new JPACommentRepository();
+		
+		jpaComment.insert(commentEntity);
+		
 	}
 
 	private void registerUser(HttpServletRequest request, HttpServletResponse response) {
@@ -156,7 +182,14 @@ public class HelloWorldServlet extends HttpServlet {
 		
 		if(user != null) {
 			request.setAttribute("user", user);
-			redirect("home.html", request, response);
+			
+			JPACommentRepository repo = new JPACommentRepository();
+			
+			List<CommentBean> comments = repo.getAllCommentsByUser(user);
+			
+			request.setAttribute("comments", comments);			
+			
+			redirect("home.jsp", request, response);
 		}else {			
 			request.setAttribute("message", "Wrong password information!");
 			redirect("error.jsp", request, response);
